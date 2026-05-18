@@ -1,11 +1,12 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <title>Cadastrar Produto</title>
   </head>
+
   <body>
     <div class="header">
       <img
@@ -13,35 +14,55 @@
         alt="Logo Farmacêuticos"
         class="logo"
       />
-      <h2>Cadastrar Produto Proximo ao vencimento</h2>
+
+      <h2>Cadastrar Produto Próximo ao Vencimento</h2>
+
       <img
         src="images/logo-farmaceuticos.png"
         alt="Logo Farmacêuticos"
         class="logo"
       />
     </div>
+
     <div id="box-cadastro">
       <div id="box-cadastro-interno">
         <form id="form">
           <input id="codigoInterno" placeholder="Código interno" />
+          <br /><br />
+
           <input id="codigoBarras" placeholder="Código de barras" />
-          <input id="nome" placeholder="Nome" required /><br /><br />
-          <input type="date" id="validade" required /><br /><br />
+          <br /><br />
+
+          <input id="nome" placeholder="Nome" required />
+          <br /><br />
+
+          <input type="date" id="validade" required />
+          <br /><br />
+
           <input
             type="number"
             id="quantidade"
             placeholder="Quantidade"
             required
-          /><br /><br />
+          />
+          <br /><br />
+
+          <select id="tipo">
+            <option value="Medicamento">Medicamento</option>
+            <option value="Alimento">Alimento</option>
+            <option value="Perfumaria">Perfumaria</option>
+          </select>
+          <br /><br />
 
           <select id="sessao">
-            <option>Referencia</option>
-            <option>Genérico</option>
-            <option>Similar</option>
-            <option>Perfumaria</option>
-            <option>Alimenticios</option>
-            <option>MIP(medicamentos insentos de prescrição)</option></select
-          ><br /><br />
+            <option value="Referencia">Referência</option>
+            <option value="Genérico">Genérico</option>
+            <option value="Similar">Similar</option>
+            <option value="Perfumaria">Perfumaria</option>
+            <option value="Alimenticios">Alimentícios</option>
+            <option value="MIP">MIP - Medicamentos isentos de prescrição</option>
+          </select>
+          <br /><br />
 
           <button id="btn-cadastrar" type="submit">Cadastrar</button>
         </form>
@@ -49,76 +70,63 @@
     </div>
 
     <script>
+      const API = "https://controle-de-validade-b1kj.onrender.com";
+
       async function buscarProdutoPorCodigo(codigo) {
         if (!codigo) return;
 
         try {
-          const resposta = await fetch(
-            `https://controle-de-validade-b1kj.onrender.com/produtos/buscar/${codigo}`,
-          );
+          const resposta = await fetch(`${API}/produtos/buscar/${codigo}`);
 
           if (!resposta.ok) {
-            console.log("Produto não encontrado");
+            console.log("Produto não encontrado no cadastro mestre.");
             return;
           }
 
           const produto = await resposta.json();
 
           document.getElementById("nome").value = produto.nome || "";
-
           document.getElementById("sessao").value = produto.sessao || "";
-
           document.getElementById("tipo").value = produto.tipo || "";
         } catch (erro) {
           console.log("Erro ao buscar produto:", erro);
         }
       }
+
+      document.getElementById("codigoInterno").addEventListener("blur", () => {
+        buscarProdutoPorCodigo(
+          document.getElementById("codigoInterno").value
+        );
+      });
+
+      document.getElementById("codigoBarras").addEventListener("blur", () => {
+        buscarProdutoPorCodigo(
+          document.getElementById("codigoBarras").value
+        );
+      });
+
       document.getElementById("form").addEventListener("submit", async (e) => {
         e.preventDefault();
 
-
-document.getElementById("codigoInterno")
-.addEventListener("blur", () => {
-
-  buscarProdutoPorCodigo(
-    document.getElementById("codigoInterno").value
-  );
-
-});
-
-document.getElementById("codigoBarras")
-.addEventListener("blur", () => {
-
-  buscarProdutoPorCodigo(
-    document.getElementById("codigoBarras").value
-  );
-
-});
-
-
         try {
-          const resposta = await fetch(
-            "https://controle-de-validade-b1kj.onrender.com/produtos",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                codigoInterno: document.getElementById("codigoInterno").value,
+          const tipo = document.getElementById("tipo").value;
 
-                codigoBarras: document.getElementById("codigoBarras").value,
-
-                nome: document.getElementById("nome").value,
-
-                validade: document.getElementById("validade").value,
-
-                quantidade: Number(document.getElementById("quantidade").value),
-
-                sessao: document.getElementById("sessao").value,
-              }),
+          const resposta = await fetch(`${API}/produtos`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
             },
-          );
+            body: JSON.stringify({
+              codigoInterno: document.getElementById("codigoInterno").value,
+              codigoBarras: document.getElementById("codigoBarras").value,
+              nome: document.getElementById("nome").value,
+              validade: document.getElementById("validade").value,
+              quantidade: Number(document.getElementById("quantidade").value),
+              sessao: document.getElementById("sessao").value,
+              tipo: tipo,
+              alertaDias: tipo === "Medicamento" ? 60 : 30,
+            }),
+          });
 
           if (!resposta.ok) {
             throw new Error("Erro ao cadastrar produto");
