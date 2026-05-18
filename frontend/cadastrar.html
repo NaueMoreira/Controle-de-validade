@@ -49,17 +49,54 @@
     </div>
 
     <script>
+      async function buscarProdutoPorCodigo(codigo) {
+        if (!codigo) return;
+
+        try {
+          const resposta = await fetch(
+            `https://controle-de-validade-b1kj.onrender.com/produtos/buscar/${codigo}`,
+          );
+
+          if (!resposta.ok) {
+            console.log("Produto não encontrado");
+            return;
+          }
+
+          const produto = await resposta.json();
+
+          document.getElementById("nome").value = produto.nome || "";
+
+          document.getElementById("sessao").value = produto.sessao || "";
+
+          document.getElementById("tipo").value = produto.tipo || "";
+        } catch (erro) {
+          console.log("Erro ao buscar produto:", erro);
+        }
+      }
       document.getElementById("form").addEventListener("submit", async (e) => {
         e.preventDefault();
 
+
+document.getElementById("codigoInterno")
+.addEventListener("blur", () => {
+
+  buscarProdutoPorCodigo(
+    document.getElementById("codigoInterno").value
+  );
+
+});
+
+document.getElementById("codigoBarras")
+.addEventListener("blur", () => {
+
+  buscarProdutoPorCodigo(
+    document.getElementById("codigoBarras").value
+  );
+
+});
+
+
         try {
-          console.log(document.getElementById("codigoInterno"));
-console.log(document.getElementById("codigoBarras"));
-console.log(document.getElementById("nome"));
-console.log(document.getElementById("validade"));
-console.log(document.getElementById("quantidade"));
-console.log(document.getElementById("sessao"));
-console.log(document.getElementById("tipo"));
           const resposta = await fetch(
             "https://controle-de-validade-b1kj.onrender.com/produtos",
             {
