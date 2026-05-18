@@ -6,7 +6,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb+srv://nauemoreira_db_user:0h2fJJDMJvtzDtaH@cluster1.sv7ppla.mongodb.net/?appName=Cluster1');
+mongoose.connect(process.env.MONGO_URL)
+  .then(() => console.log("Mongo conectado"))
+  .catch(err => console.log("Erro Mongo:", err));
 
 const Produto = mongoose.model('Produto', {
   codigo: String,
@@ -49,4 +51,8 @@ app.delete('/produtos/:id', async (req, res) => {
   res.json({ ok: true });
 });
 
-app.listen(3000, () => console.log('Servidor rodando na porta 3000'));
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Servidor rodando");
+});
