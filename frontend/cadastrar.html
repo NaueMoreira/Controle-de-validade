@@ -53,6 +53,13 @@
         e.preventDefault();
 
         try {
+          console.log(document.getElementById("codigoInterno"));
+console.log(document.getElementById("codigoBarras"));
+console.log(document.getElementById("nome"));
+console.log(document.getElementById("validade"));
+console.log(document.getElementById("quantidade"));
+console.log(document.getElementById("sessao"));
+console.log(document.getElementById("tipo"));
           const resposta = await fetch(
             "https://controle-de-validade-b1kj.onrender.com/produtos",
             {
