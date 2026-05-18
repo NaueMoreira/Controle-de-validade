@@ -9,9 +9,9 @@
 <body>
     
 <div class="header">
-  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+  <img src="../images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
   <h2>Editar Produto Proximo ao Vencimento</h2>
-  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+  <img src="../images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
 </div>
 
 <div id="box-editar">
@@ -41,7 +41,7 @@ const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
 
 async function carregar() {
-  const res = await fetch('http://localhost:3000/produtos/' + id);
+  const res = await fetch("https://controle-de-validade-b1kj.onrender.com/produtos/" + id);
   const p = await res.json();
 
   codigo.value = p.codigo;

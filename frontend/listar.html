@@ -8,9 +8,9 @@
 </head>
 <body>
 <div class="header">
-  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+  <img src="../images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
   <h2>Controle de validade de produtos </h2>
-  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+  <img src="../images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
 </div>
 <a href="cadastro.html" id="link-new">Novo Produto</a>
   <input type="text" id="filtro-input" placeholder="Filtrar por nome..."><br>
@@ -21,7 +21,7 @@
 let todosProdutos = [];
 
 async function carregar() {
-  const res = await fetch('http://localhost:3000/produtos');
+  const res = await fetch("https://controle-de-validade-b1kj.onrender.com/produtos");
   todosProdutos = await res.json();
   exibirProdutos(todosProdutos);
 }
@@ -54,7 +54,7 @@ document.getElementById('filtro-input').addEventListener('input', (e) => {
 });
 
 async function excluir(id) {
-  await fetch("https://controle-de-validade-b1kj.onrender.com/produtos" + id, {
+  await fetch("https://controle-de-validade-b1kj.onrender.com/produtos/" + id, {
     method: 'DELETE'
   });
   carregar();
