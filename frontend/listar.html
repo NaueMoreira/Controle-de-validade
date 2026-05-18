@@ -54,7 +54,7 @@ document.getElementById('filtro-input').addEventListener('input', (e) => {
 });
 
 async function excluir(id) {
-  await fetch('http://localhost:3000/produtos/' + id, {
+  await fetch("https://controle-de-validade-b1kj.onrender.com/produtos" + id, {
     method: 'DELETE'
   });
   carregar();

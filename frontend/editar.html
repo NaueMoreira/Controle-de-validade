@@ -54,7 +54,7 @@ async function carregar() {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  await fetch('http://localhost:3000/produtos/' + id, {
+  await fetch("https://controle-de-validade-b1kj.onrender.com/produtos/" + id, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
