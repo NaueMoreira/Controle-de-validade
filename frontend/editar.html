@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    
+<div class="header">
+  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+  <h2>Editar Produto Proximo ao Vencimento</h2>
+  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+</div>
+
+<div id="box-editar">
+  <div id="box-cadastro-interno">
+    <form id="form">
+      <input id="codigo" placeholder="Código">
+      <input id="nome" placeholder="Nome">
+      <input type="date" id="validade">
+      <input type="number" id="quantidade" placeholder="Quantidade">
+
+      <select id="sessao">
+        <option>Referencia</option>
+        <option>Genérico</option>
+        <option>Similar</option>
+        <option>Perfumaria</option>
+        <option>Alimenticios</option>
+        <option>Farmácia Popular</option>
+      </select><br><br>
+
+      <button id="btn-salvar" type="submit">Salvar</button>
+    </form>
+  </div>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get('id');
+
+async function carregar() {
+  const res = await fetch('http://localhost:3000/produtos/' + id);
+  const p = await res.json();
+
+  codigo.value = p.codigo;
+  nome.value = p.nome;
+  validade.value = p.validade;
+  quantidade.value = p.quantidade;
+  sessao.value = p.sessao;
+}
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  await fetch('http://localhost:3000/produtos/' + id, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      codigo: codigo.value,
+      nome: nome.value,
+      validade: validade.value,
+      quantidade: quantidade.value,
+      sessao: sessao.value
+    })
+  });
+
+  window.location.href = 'lista.html';
+});
+
+carregar();
+</script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+
+  <div class="header">
+<img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+<h2>Cadastrar Produto Proximo ao vencimento</h2>
+<img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+</div>
+<div id="box-cadastro">
+  <div id="box-cadastro-interno">
+<form id="form">
+  <input id="codigo" placeholder="Código" required><br><br>
+  <input id="nome" placeholder="Nome" required><br><br>
+  <input type="date" id="validade" required><br><br>
+  <input type="number" id="quantidade" placeholder="Quantidade" required><br><br>
+
+  <select id="sessao">
+    <option >Referencia</option>
+    <option>Genérico</option>
+    <option>Similar</option>
+    <option>Perfumaria</option>
+    <option>Alimenticios</option>
+    <option>Farmácia Popular</option>
+  </select><br><br>
+
+  <button id="btn-cadastrar" type="submit">Cadastrar</button>
+</form>
+  </div>
+</div>
+
+<script>
+document.getElementById('form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  await fetch('http://localhost:3000/produtos', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      codigo: codigo.value,
+      nome: nome.value,
+      validade: validade.value,
+      quantidade: quantidade.value,
+      sessao: sessao.value
+    })
+  });
+
+  window.location.href = 'lista.html';
+});
+</script>
+</body>
+</html>

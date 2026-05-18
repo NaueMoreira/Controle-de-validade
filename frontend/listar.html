@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+<div class="header">
+  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+  <h2>Controle de validade de produtos </h2>
+  <img src="../midia/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
+</div>
+<a href="cadastro.html" id="link-new">Novo Produto</a>
+  <input type="text" id="filtro-input" placeholder="Filtrar por nome..."><br>
+
+<div id="lista"></div>
+
+<script>
+let todosProdutos = [];
+
+async function carregar() {
+  const res = await fetch('http://localhost:3000/produtos');
+  todosProdutos = await res.json();
+  exibirProdutos(todosProdutos);
+}
+
+function exibirProdutos(produtos) {
+  const div = document.getElementById('lista');
+  div.innerHTML = '';
+
+  produtos.forEach(p => {
+    div.innerHTML += `
+      <div class="card">
+        <b>Código:</b> ${p.codigo}<br><br>
+        <b>Nome:</b> ${p.nome}<br><br>
+        <b>Quantidade:</b> ${p.quantidade}<br><br>
+        <b>Sessão:</b> ${p.sessao}<br><br>
+        <b>Validade:</b> ${p.validade}<br>
+        
+
+        <button id="btn-editar" onclick="editar('${p._id}')">Editar</button>
+        <button id="btn-excluir" onclick="excluir('${p._id}')">Excluir</button>
+      </div>
+    `;
+  });
+}
+
+document.getElementById('filtro-input').addEventListener('input', (e) => {
+  const filtro = e.target.value.toLowerCase();
+  const produtosFiltrados = todosProdutos.filter(p => p.nome.toLowerCase().includes(filtro));
+  exibirProdutos(produtosFiltrados);
+});
+
+async function excluir(id) {
+  await fetch('http://localhost:3000/produtos/' + id, {
+    method: 'DELETE'
+  });
+  carregar();
+}
+
+function editar(id) {
+  window.location.href = 'editar.html?id=' + id;
+}
+
+carregar();
+</script>
+</body>
+</html>
