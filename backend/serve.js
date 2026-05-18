@@ -11,11 +11,13 @@ mongoose.connect(process.env.MONGO_URL)
   .catch(err => console.log("Erro Mongo:", err));
 
 const Produto = mongoose.model('Produto', {
-  codigo: String,
+ codigoInterno: String,
+  codigoBarras: String,
   nome: String,
   validade: String,
   quantidade: Number,
-  sessao: String
+  sessao: String,
+  tipo: String
 });
 
 //rotas
@@ -34,6 +36,22 @@ app.post('/produtos', async (req, res) => {
 app.get('/produtos', async (req, res) => {
   const produtos = await Produto.find();
   res.json(produtos);
+});
+
+app.get('/produtos/buscar/:codigo', async (req, res) => {
+  const codigo = req.params.codigo;
+  const produto = await Produto.findOne({
+    $or: [
+      { codigoInterno: codigo },
+      { codigoBarras: codigo }
+    ]
+  });
+  if (!produto) {
+    return res.status(404).json({
+      mensagem: "Produto não encontrado"
+    });
+  }
+  res.json(produto);
 });
 
 app.get('/produtos/:id', async (req, res) => {

@@ -1,70 +1,98 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
+    <div class="header">
+      <img
+        src="images/logo-farmaceuticos.png"
+        alt="Logo Farmacêuticos"
+        class="logo"
+      />
+      <h2>Cadastrar Produto Proximo ao vencimento</h2>
+      <img
+        src="images/logo-farmaceuticos.png"
+        alt="Logo Farmacêuticos"
+        class="logo"
+      />
+    </div>
+    <div id="box-cadastro">
+      <div id="box-cadastro-interno">
+        <form id="form">
+          <input id="codigoInterno" placeholder="Código interno" />
+          <input id="codigoBarras" placeholder="Código de barras" />
+          <input id="nome" placeholder="Nome" required /><br /><br />
+          <input type="date" id="validade" required /><br /><br />
+          <input
+            type="number"
+            id="quantidade"
+            placeholder="Quantidade"
+            required
+          /><br /><br />
 
-  <div class="header">
-<img src="images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
-<h2>Cadastrar Produto Proximo ao vencimento</h2>
-<img src="images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
-</div>
-<div id="box-cadastro">
-  <div id="box-cadastro-interno">
-<form id="form">
-  <input id="codigo" placeholder="Código" required><br><br>
-  <input id="nome" placeholder="Nome" required><br><br>
-  <input type="date" id="validade" required><br><br>
-  <input type="number" id="quantidade" placeholder="Quantidade" required><br><br>
+          <select id="sessao">
+            <option>Referencia</option>
+            <option>Genérico</option>
+            <option>Similar</option>
+            <option>Perfumaria</option>
+            <option>Alimenticios</option>
+            <option>MIP(medicamentos insentos de prescrição)</option></select
+          ><br /><br />
 
-  <select id="sessao">
-    <option >Referencia</option>
-    <option>Genérico</option>
-    <option>Similar</option>
-    <option>Perfumaria</option>
-    <option>Alimenticios</option>
-    <option>MIP(medicamentos insentos de prescrição)</option>
-  </select><br><br>
+          <button id="btn-cadastrar" type="submit">Cadastrar</button>
+        </form>
+      </div>
+    </div>
 
-  <button id="btn-cadastrar" type="submit">Cadastrar</button>
-</form>
-  </div>
-</div>
+    <script>
+      document.getElementById("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-<script>
-document.getElementById('form').addEventListener('submit', async (e) => {
-  e.preventDefault();
+        try {
+          const resposta = await fetch(
+            "https://controle-de-validade-b1kj.onrender.com/produtos",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                codigoInterno: document.getElementById("codigoInterno").value,
 
-  try {
-    const resposta = await fetch("https://controle-de-validade-b1kj.onrender.com/produtos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        codigo: document.getElementById("codigo").value,
-        nome: document.getElementById("nome").value,
-        validade: document.getElementById("validade").value,
-        quantidade: Number(document.getElementById("quantidade").value),
-        sessao: document.getElementById("sessao").value
-      })
-    });
+                codigoBarras: document.getElementById("codigoBarras").value,
 
-    if (!resposta.ok) {
-      throw new Error("Erro ao cadastrar produto");
-    }
+                nome: document.getElementById("nome").value,
 
-    window.location.href = "listar.html";
+                validade: document.getElementById("validade").value,
 
-  } catch (erro) {
-    alert("Erro ao cadastrar. Veja o console.");
-    console.error(erro);
-  }
-});
-</script>
-</body>
+                quantidade: Number(document.getElementById("quantidade").value),
+
+                sessao: document.getElementById("sessao").value,
+
+                tipo: document.getElementById("tipo").value,
+
+                alertaDias:
+                  document.getElementById("tipo").value === "Medicamento"
+                    ? 60
+                    : 30,
+              }),
+            },
+          );
+
+          if (!resposta.ok) {
+            throw new Error("Erro ao cadastrar produto");
+          }
+
+          window.location.href = "listar.html";
+        } catch (erro) {
+          alert("Erro ao cadastrar. Veja o console.");
+          console.error(erro);
+        }
+      });
+    </script>
+  </body>
 </html>
