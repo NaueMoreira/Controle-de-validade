@@ -70,7 +70,10 @@
     </div>
 
     <script>
-      const API = "https://controle-de-validade-b1kj.onrender.com";
+      const REMOTE_API = "https://controle-de-validade-b1kj.onrender.com";
+      const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000'
+        : REMOTE_API;
 
       async function buscarProdutoPorCodigo(codigo) {
         if (!codigo) return;

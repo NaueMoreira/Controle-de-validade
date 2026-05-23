@@ -20,8 +20,13 @@
 <script>
 let todosProdutos = [];
 
+const REMOTE_API = "https://controle-de-validade-b1kj.onrender.com";
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3000'
+  : REMOTE_API;
+
 async function carregar() {
-  const res = await fetch("https://controle-de-validade-b1kj.onrender.com/produtos");
+  const res = await fetch(API + "/produtos");
   todosProdutos = await res.json();
   exibirProdutos(todosProdutos);
 }
@@ -54,7 +59,7 @@ document.getElementById('filtro-input').addEventListener('input', (e) => {
 });
 
 async function excluir(id) {
-  await fetch("https://controle-de-validade-b1kj.onrender.com/produtos/" + id, {
+  await fetch(API + "/produtos/" + id, {
     method: 'DELETE'
   });
   carregar();

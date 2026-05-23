@@ -94,7 +94,8 @@ div.card {
     font-size: 1.2em;
   }
 }
-
+#codigoInterno,
+#codigoBarras,
 #codigo,
 #nome,
 #validade,

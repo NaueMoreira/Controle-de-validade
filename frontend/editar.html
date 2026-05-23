@@ -39,9 +39,13 @@
 <script>
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get('id');
+const REMOTE_API = "https://controle-de-validade-b1kj.onrender.com";
+const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3000'
+  : REMOTE_API;
 
 async function carregar() {
-  const res = await fetch("https://controle-de-validade-b1kj.onrender.com/produtos/" + id);
+  const res = await fetch(API + "/produtos/" + id);
   const p = await res.json();
 
   codigo.value = p.codigo;
@@ -54,7 +58,7 @@ async function carregar() {
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  await fetch("https://controle-de-validade-b1kj.onrender.com/produtos/" + id, {
+  await fetch(API + "/produtos/" + id, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
