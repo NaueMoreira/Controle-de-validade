@@ -11,25 +11,49 @@ mongoose.connect(process.env.MONGO_URL)
   .catch(err => console.log("Erro Mongo:", err));
 
 const Produto = mongoose.model('Produto', {
- codigoInterno: String,
+  codigoInterno: String,
   codigoBarras: String,
   nome: String,
   validade: String,
   quantidade: Number,
   sessao: String,
+  tipo: String,
+  alertaDias: Number
+});
+
+const ProdutoMestre = mongoose.model('ProdutoMestre', {
+  codigoInterno: String,
+  codigoBarras: String,
+  nome: String,
   tipo: String
 });
 
 //rotas
 
-
 app.get("/", (req, res) => {
-    res.send("API funcionando 🚀");
+  res.send("API funcionando 🚀");
 });
 
 app.post('/produtos', async (req, res) => {
   const produto = new Produto(req.body);
   await produto.save();
+
+  await ProdutoMestre.findOneAndUpdate(
+    {
+      $or: [
+        { codigoInterno: produto.codigoInterno },
+        { codigoBarras: produto.codigoBarras }
+      ]
+    },
+    {
+      codigoInterno: produto.codigoInterno,
+      codigoBarras: produto.codigoBarras,
+      nome: produto.nome,
+      tipo: produto.tipo
+    },
+    { upsert: true, new: true }
+  );
+
   res.json(produto);
 });
 
@@ -40,17 +64,28 @@ app.get('/produtos', async (req, res) => {
 
 app.get('/produtos/buscar/:codigo', async (req, res) => {
   const codigo = req.params.codigo;
-  const produto = await Produto.findOne({
+  let produto = await ProdutoMestre.findOne({
     $or: [
       { codigoInterno: codigo },
       { codigoBarras: codigo }
     ]
   });
+
+  if (!produto) {
+    produto = await Produto.findOne({
+      $or: [
+        { codigoInterno: codigo },
+        { codigoBarras: codigo }
+      ]
+    });
+  }
+
   if (!produto) {
     return res.status(404).json({
       mensagem: "Produto não encontrado"
     });
   }
+
   res.json(produto);
 });
 
