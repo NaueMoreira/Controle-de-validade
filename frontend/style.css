@@ -34,25 +34,26 @@ div.card {
 }
 
 #link-new {
-    width: 500px;
-    height: 10%;
+    display: inline-block;
+    width: auto;
+    min-width: 130px;
     background: rgb(46, 206, 31);
     color: white;
     text-decoration: none;
     border-radius: 10px;
-    padding: 10px;
-    text-decoration: none;
-    color: white;
-    margin-top: 300px;
+    padding: 10px 20px;
+    margin: 0 0 10px 0;
 }
 
-
 #filtro-input{
-    margin-right: -30%;
-    margin-top: -50%;
+    display: block;
+    width: 100%;
+    max-width: 360px;
+    margin: 10px 0 20px 0;
+    padding: 10px;
     border-radius: 10px;
-    border: 2px solid  rgb(46, 206, 31);
-
+    border: 2px solid rgb(46, 206, 31);
+    box-sizing: border-box;
 }
 
 #btn-editar{
