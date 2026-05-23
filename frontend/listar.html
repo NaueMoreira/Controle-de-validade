@@ -13,6 +13,7 @@
   <img src="images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
 </div>
 <a href="cadastrar.html" id="link-new">Novo Produto</a>
+  <div id="alerta-produtos"></div>
   <input type="text" id="filtro-input" placeholder="Filtrar por nome..."><br>
 
 <div id="lista"></div>
@@ -26,9 +27,36 @@ const API = window.location.hostname === 'localhost' || window.location.hostname
   : REMOTE_API;
 
 async function carregar() {
+  await carregarAlertas();
   const res = await fetch(API + "/produtos");
   todosProdutos = await res.json();
   exibirProdutos(todosProdutos);
+}
+
+async function carregarAlertas() {
+  try {
+    const res = await fetch(API + "/produtos/alerta");
+    if (!res.ok) return;
+    const produtos = await res.json();
+    const alerta = document.getElementById('alerta-produtos');
+
+    if (produtos.length === 0) {
+      alerta.innerHTML = '';
+      return;
+    }
+
+    alerta.innerHTML = `
+      <div class="card" style="border-color: #f39c12; background: #fff8e1;">
+        <strong>Atenção:</strong> ${produtos.length} produto(s) com validade em até 60 dias.<br>
+        Retire da sessão:
+        <ul style="margin: 10px 0 0 20px; padding: 0; list-style: disc;">
+          ${produtos.map(p => `<li>${p.nome} - Validade: ${p.validade} (${p.codigoInterno || p.codigoBarras || 'sem código'})</li>`).join('')}
+        </ul>
+      </div>
+    `;
+  } catch (erro) {
+    console.error('Erro ao carregar alertas:', erro);
+  }
 }
 
 function exibirProdutos(produtos) {

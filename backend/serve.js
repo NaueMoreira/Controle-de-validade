@@ -6,8 +6,10 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect(process.env.MONGO_URL)
-  .then(() => console.log("Mongo conectado"))
+const MONGO_URL = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/controle';
+
+mongoose.connect(MONGO_URL)
+  .then(() => console.log(`Mongo conectado em ${MONGO_URL}`))
   .catch(err => console.log("Erro Mongo:", err));
 
 const Produto = mongoose.model('Produto', {
@@ -59,6 +61,22 @@ app.post('/produtos', async (req, res) => {
 
 app.get('/produtos', async (req, res) => {
   const produtos = await Produto.find();
+  res.json(produtos);
+});
+
+app.get('/produtos/alerta', async (req, res) => {
+  const hoje = new Date();
+  hoje.setHours(0, 0, 0, 0);
+  const limite = new Date(hoje);
+  limite.setDate(limite.getDate() + 60);
+
+  const hojeStr = hoje.toISOString().slice(0, 10);
+  const limiteStr = limite.toISOString().slice(0, 10);
+
+  const produtos = await Produto.find({
+    validade: { $gte: hojeStr, $lte: limiteStr }
+  }).sort({ validade: 1 });
+
   res.json(produtos);
 });
 
