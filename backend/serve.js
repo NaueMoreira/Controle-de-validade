@@ -23,15 +23,19 @@ const Produto = mongoose.model('Produto', {
   alertaDias: Number
 });
 
-
-
-const ProdutoMestre = mongoose.model('ProdutoMestre', {
-  codigoInterno: String,
-  codigoBarras: String,
-  nome: String,
-  tipo: String
-},
-"Produtosmestres"
+const ProdutoMestre = mongoose.model(
+  'ProdutoMestre',
+  {
+    codigoInterno: String,
+    codigoBarras: String,
+    nome: String,
+    tipo: String,
+    sessao: String,
+    fabricante: String,
+    laboratorio: String,
+    alertaDias: Number
+  },
+  "Produtosmestres"
 );
 
 const ProdutoVencimento = mongoose.model(
@@ -59,22 +63,33 @@ app.post('/produtos', async (req, res) => {
   await produto.save();
 
   await ProdutoMestre.findOneAndUpdate(
-    {
-      $or: [
-        { codigoInterno: produto.codigoInterno },
-        { codigoBarras: produto.codigoBarras }
-      ]
-    },
-    {
-      codigoInterno: produto.codigoInterno,
-      codigoBarras: produto.codigoBarras,
-      nome: produto.nome,
-      tipo: produto.tipo
-    },
-    { upsert: true, new: true }
-  );
+{
+  $or: [
+    { codigoInterno: produto.codigoInterno },
+    { codigoBarras: produto.codigoBarras }
+  ]
+},
+{
+  codigoInterno: produto.codigoInterno,
+  codigoBarras: produto.codigoBarras,
+  nome: produto.nome,
+  tipo: produto.tipo,
+  sessao: produto.sessao,
+  alertaDias: produto.alertaDias
+},
+{ upsert: true, new: true }
+);
 
-  res.json(produto);
+res.json({
+  id: produto._id,
+  codigoInterno: produto.codigoInterno,
+  codigoBarras: produto.codigoBarras,
+  nome: produto.nome,
+  tipo: produto.tipo,
+  sessao: produto.sessao,
+  alertaDias: produto.alertaDias
+});
+
 });
 
 app.get('/produtos', async (req, res) => {
@@ -123,6 +138,24 @@ app.get('/produtos/buscar/:codigo', async (req, res) => {
   }
 
   res.json(produto);
+});
+
+app.post('/produtos-mestre', async (req, res) => {
+  try {
+
+    const produto = new ProdutoMestre(req.body);
+
+    await produto.save();
+
+    res.json(produto);
+
+  } catch (erro) {
+
+    res.status(500).json({
+      erro: erro.message
+    });
+
+  }
 });
 
 app.get('/produtos/:id', async (req, res) => {

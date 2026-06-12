@@ -101,6 +101,15 @@
     document.getElementById("tipo").value =
       produto.tipo || "Medicamento";
 
+      document.getElementById("sessao").value =
+  produto.sessao || "";
+
+document.getElementById("codigoInterno").value =
+  produto.codigoInterno || "";
+
+document.getElementById("codigoBarras").value =
+  produto.codigoBarras || "";
+  
   } catch (erro) {
     console.log(erro);
   }
