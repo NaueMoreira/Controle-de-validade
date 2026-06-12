@@ -26,6 +26,7 @@
 
     <div id="box-cadastro">
       <div id="box-cadastro-interno">
+        <input type="hidden" id="produtoId">
         <form id="form">
           <input id="codigoInterno" placeholder="Código interno" />
           <br /><br />
@@ -75,26 +76,35 @@
         ? 'http://localhost:3000'
         : REMOTE_API;
 
-      async function buscarProdutoPorCodigo(codigo) {
-        if (!codigo) return;
+    async function buscarProdutoPorCodigo(codigo) {
 
-        try {
-          const resposta = await fetch(`${API}/produtos/buscar/${codigo}`);
+  if (!codigo) return;
 
-          if (!resposta.ok) {
-            console.log("Produto não encontrado no cadastro mestre.");
-            return;
-          }
+  try {
 
-          const produto = await resposta.json();
+    const resposta = await fetch(
+      `${API}/produtos/buscar/${codigo}`
+    );
 
-          document.getElementById("nome").value = produto.nome || "";
-          document.getElementById("sessao").value = produto.sessao || "";
-          document.getElementById("tipo").value = produto.tipo || "";
-        } catch (erro) {
-          console.log("Erro ao buscar produto:", erro);
-        }
-      }
+    if (!resposta.ok) {
+      return;
+    }
+
+    const produto = await resposta.json();
+
+    document.getElementById("produtoId").value =
+      produto._id;
+
+    document.getElementById("nome").value =
+      produto.nome || "";
+
+    document.getElementById("tipo").value =
+      produto.tipo || "Medicamento";
+
+  } catch (erro) {
+    console.log(erro);
+  }
+}
 
       document.getElementById("codigoInterno").addEventListener("blur", () => {
         buscarProdutoPorCodigo(

@@ -23,12 +23,30 @@ const Produto = mongoose.model('Produto', {
   alertaDias: Number
 });
 
+
+
 const ProdutoMestre = mongoose.model('ProdutoMestre', {
   codigoInterno: String,
   codigoBarras: String,
   nome: String,
   tipo: String
-});
+},
+"Produtosmestres"
+);
+
+const ProdutoVencimento = mongoose.model(
+  "ProdutoVencimento",
+  {
+    produtoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "ProdutoMestre"
+    },
+    validade: String,
+    quantidade: Number,
+    sessao: String
+  },
+  "produtos"
+);
 
 //rotas
 

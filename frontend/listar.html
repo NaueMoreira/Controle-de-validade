@@ -1,74 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Document</title>
-</head>
-<body>
-<div class="header">
-  <img src="images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
-  <h2>Controle de validade de produtos </h2>
-  <img src="images/logo-farmaceuticos.png" alt="Logo Farmacêuticos" class="logo">
-</div>
-<a href="cadastrar.html" id="link-new">Novo Produto</a>
-  <div id="alerta-produtos"></div>
-  <input type="text" id="filtro-input" placeholder="Filtrar por nome..."><br>
+  </head>
+  <body>
+    <div class="header">
+      <img
+        src="images/logo-farmaceuticos.png"
+        alt="Logo Farmacêuticos"
+        class="logo"
+      />
+      <h2>Controle de validade de produtos</h2>
+      <img
+        src="images/logo-farmaceuticos.png"
+        alt="Logo Farmacêuticos"
+        class="logo"
+      />
+    </div>
+    <a href="cadastrar.html" id="link-new">Novo Produto</a>
+    <div id="alerta-produtos"></div>
+    <input
+      type="text"
+      id="filtro-input"
+      placeholder="Filtrar por nome..."
+    /><br />
 
-<div id="lista"></div>
+    <div id="lista"></div>
 
-<script>
-let todosProdutos = [];
+    <script>
+      let todosProdutos = [];
 
-const REMOTE_API = "https://controle-de-validade-b1kj.onrender.com";
-const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000'
-  : REMOTE_API;
+      const REMOTE_API = "https://controle-de-validade-b1kj.onrender.com";
+      const API =
+        window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1"
+          ? "http://localhost:3000"
+          : REMOTE_API;
 
-async function carregar() {
-  await carregarAlertas();
-  const res = await fetch(API + "/produtos");
-  todosProdutos = await res.json();
-  exibirProdutos(todosProdutos);
-}
+      async function carregar() {
+        await carregarAlertas();
+        const res = await fetch(API + "/produtos");
+        todosProdutos = await res.json();
+        exibirProdutos(todosProdutos);
+      }
 
-async function carregarAlertas() {
-  try {
-    const res = await fetch(API + "/produtos/alerta");
-    if (!res.ok) return;
-    const produtos = await res.json();
-    const alerta = document.getElementById('alerta-produtos');
+      async function carregarAlertas() {
+        try {
+          const res = await fetch(API + "/produtos/alerta");
+          if (!res.ok) return;
+          const produtos = await res.json();
+          const alerta = document.getElementById("alerta-produtos");
 
-    if (produtos.length === 0) {
-      alerta.innerHTML = '';
-      return;
-    }
+          if (produtos.length === 0) {
+            alerta.innerHTML = "";
+            return;
+          }
 
-    alerta.innerHTML = `
+          alerta.innerHTML = `
       <div class="card" style="border-color: #f39c12; background: #fff8e1;">
         <strong>Atenção:</strong> ${produtos.length} produto(s) com validade em até 60 dias.<br>
         Retire da sessão:
         <ul style="margin: 10px 0 0 20px; padding: 0; list-style: disc;">
-          ${produtos.map(p => `<li>${p.nome} - Validade: ${p.validade} (${p.codigoInterno || p.codigoBarras || 'sem código'})</li>`).join('')}
+          ${produtos.map((p) => `<li>${p.nome} - Validade: ${p.validade} (${p.codigoInterno || p.codigoBarras || "sem código"})</li>`).join("")}
         </ul>
       </div>
     `;
-  } catch (erro) {
-    console.error('Erro ao carregar alertas:', erro);
-  }
-}
+        } catch (erro) {
+          console.error("Erro ao carregar alertas:", erro);
+        }
+      }
 
-function exibirProdutos(produtos) {
-  const div = document.getElementById('lista');
-  div.innerHTML = '';
+      function exibirProdutos(produtos) {
+        const div = document.getElementById("lista");
+        div.innerHTML = "";
 
-  produtos.forEach(p => {
-    div.innerHTML += `
+        produtos.forEach((p) => {
+          div.innerHTML += `
       <div class="card">
-        <b>Código interno:</b> ${p.codigoInterno || "Não informado"}<br><br>
-        <b>Código de barras:</b> ${p.codigoBarras || "Não informado"}<br><br>
-        <b>Nome:</b> ${p.nome}<br><br>
+        <b>Código interno:</b> ${p.produtoId?.codigoInterno || "Não informado"}<br><br>
+        <b>Código de barras:</b> ${p.produtoId?.codigoBarras || "Não informado"}<br><br>
+        <b>Nome:</b> ${p.produtoId?.nome || "Não informado"}<br><br>
         <b>Quantidade:</b> ${p.quantidade}<br><br>
         <b>Sessão:</b> ${p.sessao}<br><br>
         <b>Validade:</b> ${p.validade}<br>
@@ -77,27 +91,29 @@ function exibirProdutos(produtos) {
         <button id="btn-excluir" onclick="excluir('${p._id}')">Excluir</button>
       </div>
     `;
-  });
-}
+        });
+      }
 
-document.getElementById('filtro-input').addEventListener('input', (e) => {
-  const filtro = e.target.value.toLowerCase();
-  const produtosFiltrados = todosProdutos.filter(p => p.nome.toLowerCase().includes(filtro));
-  exibirProdutos(produtosFiltrados);
-});
+      document.getElementById("filtro-input").addEventListener("input", (e) => {
+        const filtro = e.target.value.toLowerCase();
+        const produtosFiltrados = todosProdutos.filter((p) =>
+          p.nome.toLowerCase().includes(filtro),
+        );
+        exibirProdutos(produtosFiltrados);
+      });
 
-async function excluir(id) {
-  await fetch(API + "/produtos/" + id, {
-    method: 'DELETE'
-  });
-  carregar();
-}
+      async function excluir(id) {
+        await fetch(API + "/produtos/" + id, {
+          method: "DELETE",
+        });
+        carregar();
+      }
 
-function editar(id) {
-  window.location.href = 'editar.html?id=' + id;
-}
+      function editar(id) {
+        window.location.href = "editar.html?id=" + id;
+      }
 
-carregar();
-</script>
-</body>
+      carregar();
+    </script>
+  </body>
 </html>
