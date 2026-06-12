@@ -80,9 +80,9 @@
         produtos.forEach((p) => {
           div.innerHTML += `
       <div class="card">
-        <b>Código interno:</b> ${p.produtoId?.codigoInterno || "Não informado"}<br><br>
-        <b>Código de barras:</b> ${p.produtoId?.codigoBarras || "Não informado"}<br><br>
-        <b>Nome:</b> ${p.produtoId?.nome || "Não informado"}<br><br>
+        <b>Código interno:</b> ${p.codigoInterno || "Não informado"}<br><br>
+        <b>Código de barras:</b> ${p.codigoBarras || "Não informado"}<br><br>
+        <b>Nome:</b> ${p.nome || "Não informado"}<br><br>
         <b>Quantidade:</b> ${p.quantidade}<br><br>
         <b>Sessão:</b> ${p.sessao}<br><br>
         <b>Validade:</b> ${p.validade}<br>
