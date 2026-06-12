@@ -50,18 +50,21 @@
       async function carregarAlertas() {
         try {
           const res = await fetch(API + "/produtos/alerta");
-          if (!res.ok) return;
+          if (!res.ok) {
+            console.error("Erro ao buscar alertas:", res.status);
+            return;
+          }
           const produtos = await res.json();
           const alerta = document.getElementById("alerta-produtos");
 
-          if (produtos.length === 0) {
+          if (!produtos || produtos.length === 0) {
             alerta.innerHTML = "";
             return;
           }
 
           alerta.innerHTML = `
       <div class="card" style="border-color: #f39c12; background: #fff8e1;">
-        <strong>Atenção:</strong> ${produtos.length} produto(s) com validade em até 60 dias.<br>
+        <strong>⚠️ Atenção:</strong> ${produtos.length} produto(s) com validade em até 60 dias.<br>
         Retire da sessão:
         <ul style="margin: 10px 0 0 20px; padding: 0; list-style: disc;">
           ${produtos.map((p) => `<li>${p.nome} - Validade: ${p.validade} (${p.codigoInterno || p.codigoBarras || "sem código"})</li>`).join("")}
@@ -97,7 +100,7 @@
       document.getElementById("filtro-input").addEventListener("input", (e) => {
         const filtro = e.target.value.toLowerCase();
         const produtosFiltrados = todosProdutos.filter((p) =>
-          p.nome.toLowerCase().includes(filtro),
+          (p.nome || "").toLowerCase().includes(filtro),
         );
         exibirProdutos(produtosFiltrados);
       });
