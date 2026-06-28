@@ -115,6 +115,7 @@ div.card {
     border-radius: 5px;
     border: none;
 }
+#box-editar,
 #box-cadastro {
     border: 4px solid rgb(8, 219, 8);
     padding: 20px;
@@ -127,20 +128,6 @@ div.card {
     text-align: center;
     box-sizing: border-box;
 }
-#box-editar{
-  border: 4px solid rgb(8, 219, 8);
-    padding: 20px;
-    margin: 20px auto;
-    border-radius: 10px;
-    width: 100%;
-    max-width: 480px;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    box-sizing: border-box;
-    padding-top: 20px;
-}
-
 
 #form {
     width: 100%;
