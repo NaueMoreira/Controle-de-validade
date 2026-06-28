@@ -101,12 +101,13 @@ div.card {
 #nome,
 #validade,
 #quantidade,
+#codigo,
 #sessao {
     width: 100%;
     box-sizing: border-box;
     border-radius: 10px;
     background: rgb(226, 226, 226);
-    border: 2px solid rgb(8, 219, 8);
+    border: 3px solid rgb(8, 219, 8);
 }
 #btn-cadastrar{
     background: rgb(18, 1, 245);
