@@ -109,6 +109,7 @@ div.card {
     background: rgb(226, 226, 226);
     border: 3px solid rgb(8, 219, 8);
 }
+#btn-salvar,
 #btn-cadastrar{
     background: rgb(18, 1, 245);
     color: white;
