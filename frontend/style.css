@@ -106,7 +106,7 @@ div.card {
     box-sizing: border-box;
     border-radius: 10px;
     background: rgb(226, 226, 226);
-    border: 5px solid rgb(8, 219, 8);
+    border: 2px solid rgb(8, 219, 8);
 }
 #btn-cadastrar{
     background: rgb(18, 1, 245);
@@ -116,7 +116,7 @@ div.card {
 }
 #box-cadastro,
 #box-editar {
-    border: 3px solid rgb(8, 219, 8);
+    border: 4px solid rgb(8, 219, 8);
     padding: 20px;
     margin: 20px auto;
     border-radius: 10px;
