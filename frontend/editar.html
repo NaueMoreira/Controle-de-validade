@@ -45,32 +45,69 @@ const API = window.location.hostname === 'localhost' || window.location.hostname
   : REMOTE_API;
 
 async function carregar() {
-  const res = await fetch(API + "/produtos/" + id);
-  const p = await res.json();
+  try {
+    const res = await fetch(API + "/produtos/" + id);
+    
+    if (!res.ok) {
+      alert("Erro ao carregar produto!");
+      window.location.href = 'listar.html';
+      return;
+    }
+    
+    const p = await res.json();
 
-  codigo.value = p.codigo;
-  nome.value = p.nome;
-  validade.value = p.validade;
-  quantidade.value = p.quantidade;
-  sessao.value = p.sessao;
+    codigo.value = p.codigoInterno || '';
+    nome.value = p.nome || '';
+    validade.value = p.validade || '';
+    quantidade.value = p.quantidade || '';
+    sessao.value = p.sessao || '';
+  } catch (erro) {
+    console.error("Erro ao carregar:", erro);
+    alert("Erro ao carregar produto: " + erro.message);
+    window.location.href = 'listar.html';
+  }
 }
 
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
 
-  await fetch(API + "/produtos/" + id, {
-    method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      codigo: codigo.value,
-      nome: nome.value,
-      validade: validade.value,
-      quantidade: quantidade.value,
-      sessao: sessao.value
-    })
-  });
+  try {
+    // Validação básica
+    if (!codigo.value.trim() || !nome.value.trim() || !validade.value || !quantidade.value) {
+      alert("Por favor, preencha todos os campos!");
+      return;
+    }
 
-  window.location.href = 'lista.html';
+    if (quantidade.value < 0) {
+      alert("A quantidade não pode ser negativa!");
+      return;
+    }
+
+    const res = await fetch(API + "/produtos/" + id, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        codigoInterno: codigo.value,
+        codigoBarras: codigo.value,
+        nome: nome.value,
+        validade: validade.value,
+        quantidade: parseInt(quantidade.value),
+        sessao: sessao.value
+      })
+    });
+
+    if (!res.ok) {
+      const erro = await res.json();
+      alert("Erro ao salvar: " + (erro.mensagem || erro.erro || "Erro desconhecido"));
+      return;
+    }
+
+    alert("Produto atualizado com sucesso!");
+    window.location.href = 'listar.html';
+  } catch (erro) {
+    console.error("Erro ao salvar:", erro);
+    alert("Erro ao salvar produto: " + erro.message);
+  }
 });
 
 carregar();
